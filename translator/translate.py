@@ -12,7 +12,7 @@ class BaseTranslate:
         """
         check if target language supported or not
         """
-        if target in gls.keys() or target in gls.values():
+        if target in gls.values():
             self.target = target
         else:
             raise LanguageNotSupportedException()
