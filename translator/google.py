@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from .translate import BaseTranslate
 from .constant import BASE_URL
-from .exceptions import TranslationNotFound
+from .exceptions import TranslationNotFound, TooManyRequests, RequestError
 
 
     
@@ -17,11 +17,20 @@ class GoogleTranslate(BaseTranslate):
         super().__init__(text, target, source)
 
     def translate(self):
-        r = requests.get(url=BASE_URL, params=self.get_params())
-        s = BeautifulSoup(r.text, 'html.parser')
-        element = s.find(self.element_tag, self.element_query)
+        response = requests.get(url=BASE_URL, params=self.get_params())
+
+        if response.status_code == 429:
+            raise TooManyRequests()
+
+        if response.status_code != 200:
+            raise RequestError()
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        element = soup.find(self.element_tag, self.element_query)
+        
         if not element:
-            element = s.find(self.element_tag, self._alt_element_query)
+            element = soup.find(self.element_tag, self._alt_element_query)
             if not element:
                 raise TranslationNotFound(self.text)
         return element.get_text(strip=True)
