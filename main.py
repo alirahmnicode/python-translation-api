@@ -14,5 +14,10 @@ def translate(text: str, tl: str, sl: str):
 
 
 @app.get("/languages/support/")
-def languages_support():
+def get_languages_support():
     return GOOGLE_LANGUAGES_TO_CODES
+
+@app.get("/languages/support/{lnguage}")
+def is_language_supported(language: str):
+    gt = GoogleTranslate()
+    return gt._is_language_supported(language)
