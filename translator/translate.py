@@ -15,4 +15,4 @@ class BaseTranslate:
         if target in gls.values():
             self.target = target
         else:
-            raise LanguageNotSupportedException()
+            raise LanguageNotSupportedException(target)
