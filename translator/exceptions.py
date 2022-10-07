@@ -19,3 +19,13 @@ class LanguageNotSupportedException(BaseError):
     
     def __init__(self, val, message="There is no support for the chosen language"):
         super().__init__(val, message)
+
+
+
+class TranslationNotFound(BaseError):
+    """
+    exception thrown if no translation was found for the text provided by the use
+    """
+
+    def __init__(self, val, message="No translation was found using the current translator."):
+        super().__init__(val, message)
